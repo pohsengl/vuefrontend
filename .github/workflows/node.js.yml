@@ -33,6 +33,8 @@ jobs:
       run: |
         git init
         git checkout -b main
+        git config user.email "poh.seng.lim@intel.com"
+        git config user.name "pohsengl"
         git add -A
         git commit -m 'deploy'
         git push -f git@github.com:pohsengl/pohsengl.github.io.git main
