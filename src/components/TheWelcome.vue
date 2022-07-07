@@ -42,7 +42,7 @@ async function postText(textinput: string) {
     <template #icon>
       <ToolingIcon />
     </template>
-    <template #heading>Enter Text</template>
+    <template #heading>Input Text</template>
 
     <textarea v-model="textinput" />
     <br>
