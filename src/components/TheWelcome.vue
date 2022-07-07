@@ -1,32 +1,35 @@
 <script setup lang="ts">
 import WelcomeItem from "./WelcomeItem.vue";
-import DocumentationIcon from "./icons/IconDocumentation.vue";
 import ToolingIcon from "./icons/IconTooling.vue";
-import EcosystemIcon from "./icons/IconEcosystem.vue";
-import CommunityIcon from "./icons/IconCommunity.vue";
-import SupportIcon from "./icons/IconSupport.vue";
 import audio from '../assets/audio1.wav'
 import { ref } from "vue";
 import axios from 'axios'
 
 
-const textinput=ref('')
+const textinput = ref('')
+const showOutput = ref(false)
+const audioURL=ref('')
 
-function playAudio(){
-  let a=new Audio(audio)
-  a.play()
-}
 
-function submitText(){
+function submitText() {
   console.log(textinput.value)
-  postText()
+  postText(textinput.value)
 }
 
-async function postText(){
-  try{
-    const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+async function postText(textinput: string) {
+  try {
+    const POSTURL = 'https://jsonplaceholder.typicode.com/todos'
+    const data = {
+      id: 1,
+      text: textinput
+    }
+    const response = await axios.post(POSTURL, data);
     console.log(response);
-  }catch (error) {
+    if (response.status === 201){
+      showOutput.value = true
+      audioURL.value="https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav"
+    }
+  } catch (error) {
     console.error(error);
   }
 }
@@ -34,15 +37,25 @@ async function postText(){
 </script>
 
 <template>
-  <input v-model="textinput" />
-  <button type="button" @click="submitText">Submit</button>
+
   <WelcomeItem>
     <template #icon>
-      <CommunityIcon />
+      <ToolingIcon />
     </template>
-    <template #heading>Community</template>
+    <template #heading>Enter Text</template>
 
-    <button type="button" @click="playAudio">Click me</button>
+    <textarea v-model="textinput" />
+    <br>
+    <button type="button" @click="submitText">Submit</button>
+
+  </WelcomeItem>
+  <WelcomeItem v-if="showOutput">
+    <template #icon>
+      <ToolingIcon />
+    </template>
+    <template #heading>Output Speech</template>
+
+    <audio controls :src="audioURL"></audio>
 
   </WelcomeItem>
 </template>
