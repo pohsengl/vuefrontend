@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as a,a as s}from"./index.e11ad27e.js";const i={},n={class:"about"},_=s("h1",null,"This app will generate a speech with given text.",-1),o=[_];function c(r,l){return t(),a("div",n,o)}var h=e(i,[["render",c]]);export{h as default};
