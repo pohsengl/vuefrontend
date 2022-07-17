@@ -8,7 +8,7 @@ import { useRoute, useRouter } from "vue-router";
 import { saveCookie } from "@/auth";
 
 const DEFAULT_AUDIO_URL = 'https://d20d6d2exg5ld3.cloudfront.net/audio-69b1e1ab-8647-4d5a-98bf-c313ffac2bf8.wav'
-const LOGIN_URL='https://sileroapp.auth.us-west-2.amazoncognito.com/oauth2/authorize?client_id=4nfe005o4h7ms329j2m8vb5ru0&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fvue.lpssss.site'
+const LOGIN_URL = 'https://sileroapp.auth.us-west-2.amazoncognito.com/oauth2/authorize?client_id=4nfe005o4h7ms329j2m8vb5ru0&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fvue.lpssss.site'
 const textinput = ref('')
 const isGenerating = ref(false)
 const audioURL = ref(DEFAULT_AUDIO_URL)
@@ -32,28 +32,25 @@ function checkAuth() {
 
 async function getTokenFromCode() {
   console.log(route.query)
+  const params = new URLSearchParams({
+    'grant_type': 'authorization_code',
+    'client_id': '4nfe005o4h7ms329j2m8vb5ru0',
+    'redirect_uri': 'https://vue.lpssss.site',
+    'code': `${route.query['code']}`
+  })
+  const response = await axios({
+    url: 'https://sileroapp.auth.us-west-2.amazoncognito.com/oauth2/token',
+    method: 'post',
+    data: params,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
 
-  if("code" in route.query){
-    const params = new URLSearchParams({
-        'grant_type': 'authorization_code',
-        'client_id': '4nfe005o4h7ms329j2m8vb5ru0',
-        'redirect_uri': 'https://vue.lpssss.site',
-        'code': `${route.query['code']}`
-      })
-    const response= await axios({
-      url: 'https://sileroapp.auth.us-west-2.amazoncognito.com/oauth2/token',
-      method: 'post',
-      data: params,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-
-    console.log(response)
-    saveCookie(response.data["access_token"], response.data["refresh_token"])
-    isAuthenticated.value=true
-  }
-
+  console.log(response)
+  saveCookie(response.data["access_token"], response.data["refresh_token"])
+  router.replace({path: '/'})
+  //isAuthenticated.value = true
 }
 
 function login() {
@@ -103,8 +100,11 @@ async function postText(textinput: string, backendChoice: string) {
   generateTime.value = Math.round(endTime - startTime)
 }
 
+if ("code" in route.query) {
   getTokenFromCode()
-  checkAuth()
+}
+console.log('check auth')
+checkAuth()
 </script>
 
 <template>
