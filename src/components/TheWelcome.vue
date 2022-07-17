@@ -20,7 +20,7 @@ const route = useRoute()
 const accessToken= ref('')
 
 function checkAuth() {
-  //TODO: check time validity]
+  //TODO: check time validity
   const temp=document.cookie.split(';').find(row=>row.startsWith('access_token='))
   if (typeof temp !== 'undefined'){
     isAuthenticated.value = true
