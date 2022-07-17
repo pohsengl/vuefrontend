@@ -96,7 +96,7 @@ async function postText(textinput: string, backendChoice: string) {
       url: POSTURL,
       data: data,
       headers: {
-        'Authorization': `Bearer `
+        'Authorization': `Bearer ${accessToken.value}`
       }
     });
     console.log(response);
