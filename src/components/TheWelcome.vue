@@ -17,16 +17,21 @@ const generateTime = ref(0.0)
 const isAuthenticated = ref(false)
 const router = useRouter()
 const route = useRoute()
+const accessToken= ref('')
 
 function checkAuth() {
-  //TODO: check time validity
-  if (document.cookie.split(';').some((item) =>
-    item.trim().startsWith('access_token='))) {
+  //TODO: check time validity]
+  const temp=document.cookie.split(';').find(row=>row.startsWith('access_token='))
+  if (typeof temp !== 'undefined'){
     isAuthenticated.value = true
     console.log('Access token existed')
+    accessToken.value=temp.split('=')[1]
   }
   else {
     console.log('access token doesnt exist')
+    if ("code" in route.query) {
+      getTokenFromCode()
+    }
   }
 }
 
@@ -49,7 +54,8 @@ async function getTokenFromCode() {
 
   console.log(response)
   saveCookie(response.data["access_token"], response.data["refresh_token"])
-  router.replace({path: '/'})
+  accessToken.value=response.data["access_token"]
+  router.replace({ path: '/' })
   isAuthenticated.value = true
 }
 
@@ -86,7 +92,13 @@ async function postText(textinput: string, backendChoice: string) {
     const data = {
       text: textinput
     }
-    const response = await axios.post(POSTURL, data);
+    const response = await axios({
+      url: POSTURL,
+      data: data,
+      headers: {
+        'Authorization': `Bearer `
+      }
+    });
     console.log(response);
     if (response.status === 201 || response.status === 200) {
       isGenerating.value = true
@@ -100,9 +112,6 @@ async function postText(textinput: string, backendChoice: string) {
   generateTime.value = Math.round(endTime - startTime)
 }
 
-if ("code" in route.query) {
-  getTokenFromCode()
-}
 console.log('check auth')
 checkAuth()
 </script>
