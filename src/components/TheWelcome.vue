@@ -94,6 +94,7 @@ async function postText(textinput: string, backendChoice: string) {
     }
     const response = await axios({
       url: POSTURL,
+      method: 'post',
       data: data,
       headers: {
         'Authorization': `Bearer ${accessToken.value}`
