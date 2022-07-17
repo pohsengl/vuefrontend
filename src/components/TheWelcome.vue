@@ -50,7 +50,7 @@ async function getTokenFromCode() {
   console.log(response)
   saveCookie(response.data["access_token"], response.data["refresh_token"])
   router.replace({path: '/'})
-  //isAuthenticated.value = true
+  isAuthenticated.value = true
 }
 
 function login() {
