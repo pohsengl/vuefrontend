@@ -32,16 +32,18 @@ function checkAuth() {
 
 async function getTokenFromCode() {
   console.log(route.query)
+
   if("code" in route.query){
+    const params = new URLSearchParams({
+        'grant_type': 'authorization_code',
+        'client_id': '4nfe005o4h7ms329j2m8vb5ru0',
+        'redirect_uri': 'https://vue.lpssss.site',
+        'code': `${route.query['code']}`
+      })
     const response= await axios({
       url: 'https://sileroapp.auth.us-west-2.amazoncognito.com/oauth2/token',
       method: 'post',
-      data: {
-        'grant_type':'authorization_code',
-        'client_id': '4nfe005o4h7ms329j2m8vb5ru0',
-        'redirect_uri': 'https://vue.lpssss.site',
-        'code': route.query['code']
-      },
+      data: params,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
