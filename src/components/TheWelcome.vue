@@ -102,7 +102,7 @@ async function postText(textinput: string, backendChoice: string) {
     });
     console.log(response);
     if (response.status === 201 || response.status === 200) {
-      isGenerating.value = true
+      isGenerating.value = false
       console.log(response)
       audioURL.value = 'https://d20d6d2exg5ld3.cloudfront.net/' + response.data.audioURL
     }
